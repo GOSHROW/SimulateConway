@@ -22,7 +22,7 @@ class GUI extends WindowAdapter{
     public void getParams() {                             
         JSpinner row = new JSpinner (new SpinnerNumberModel(60, 2, 200, 1));
         JSpinner col = new JSpinner (new SpinnerNumberModel(50, 2, 160, 1));  
-        JSpinner tm = new JSpinner (new SpinnerNumberModel(50, 20, 1000, 20));    
+        JSpinner tm = new JSpinner (new SpinnerNumberModel(50, 50, 10000, 50));    
         Label rowL = new Label ("Enter no. of rows");
         Label colL = new Label ("Enter no. of columns");
         Label tmL = new Label ("Enter time-gap in milli-seconds");                                                                                                            
@@ -46,22 +46,24 @@ class GUI extends WindowAdapter{
                     c = Integer.parseInt(col.getValue().toString().trim());
                     t = Integer.parseInt(tm.getValue().toString().trim());
                     
-                    logic();
+                    GUISetup();
                 }  
             }
         );
         f.add(submit);
+        f.validate();
     }
 
     public void windowClosing(WindowEvent e) {  
         f.dispose();  
     }  
 
-    public void logic() {
+    public void GUISetup() {
         twodArray = new int[r][c];
         for (int i = 0, len = twodArray.length; i < len; i++) {
             Arrays.fill(twodArray[i], 0);
         }
+
         Button [][]btns = new Button[r][c];
         f.removeAll();
         f.validate();
@@ -76,12 +78,31 @@ class GUI extends WindowAdapter{
                 btns[i][j].addActionListener (new ActionListener () {  
                     public void actionPerformed (ActionEvent e) { 
                         String []indices = e.getSource().toString().split(",");
-                        System.out.println((Integer.parseInt(indices[1]) / 15) + " " + (Integer.parseInt(indices[2]) - 30) / 15);
+                        int idx = (Integer.parseInt(indices[1]) / 15);
+                        int jdx = (Integer.parseInt(indices[2]) / 15);
+                        if (twodArray[idx][jdx] == 1) {
+                            btns[idx][jdx].setBackground(new Color(0, 255, 0));
+                        } else {
+                            btns[idx][jdx].setBackground(new Color(0, 0, 255));
+                        }
+                        twodArray[idx][jdx] = (twodArray[idx][jdx] == 1) ? 0: 1;
                     }
                 });
             }
         }
         f.validate();
+
+            System.out.println("HOLA");
+            try 
+            {
+                Thread.sleep(t);
+            } 
+            catch(InterruptedException e)
+            {
+                f.dispose();
+            }
+            f.validate();
+        
     }
 }
 
