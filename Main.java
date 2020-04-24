@@ -1,7 +1,7 @@
 import java.awt.*;  
 import java.awt.event.*;  
 import java.util.*;
-
+import javax.swing.*;
 
 class GUI extends WindowAdapter{  
 
@@ -20,15 +20,12 @@ class GUI extends WindowAdapter{
     }                                    
 
     public void getParams() {                             
-        TextField row = new TextField ("50");
-        TextField col = new TextField ("50");  
-        TextField tm = new TextField ("1");    
+        JSpinner row = new JSpinner (new SpinnerNumberModel(60, 2, 200, 1));
+        JSpinner col = new JSpinner (new SpinnerNumberModel(50, 2, 160, 1));  
+        JSpinner tm = new JSpinner (new SpinnerNumberModel(50, 20, 1000, 20));    
         Label rowL = new Label ("Enter no. of rows");
         Label colL = new Label ("Enter no. of columns");
         Label tmL = new Label ("Enter time-gap in milli-seconds");                                                                                                            
-        row.setEditable(true);
-        col.setEditable(true);
-        tm.setEditable(true);
         row.setBounds(250, 50, 100, 30);  
         col.setBounds(250, 100, 100, 30); 
         tm.setBounds(250, 150, 100, 30);
@@ -45,9 +42,10 @@ class GUI extends WindowAdapter{
         submit.setBounds(150, 210, 100, 30);
         submit.addActionListener(new ActionListener(){  
             public void actionPerformed(ActionEvent e){  
-                    r = Integer.parseInt(row.getText());
-                    c = Integer.parseInt(col.getText());
-                    t = Integer.parseInt(tm.getText());
+                    r = Integer.parseInt(row.getValue().toString().trim());
+                    c = Integer.parseInt(col.getValue().toString().trim());
+                    t = Integer.parseInt(tm.getValue().toString().trim());
+                    
                     logic();
                 }  
             }
@@ -60,7 +58,30 @@ class GUI extends WindowAdapter{
     }  
 
     public void logic() {
-
+        twodArray = new int[r][c];
+        for (int i = 0, len = twodArray.length; i < len; i++) {
+            Arrays.fill(twodArray[i], 0);
+        }
+        Button [][]btns = new Button[r][c];
+        f.removeAll();
+        f.validate();
+        f.setSize (900,750);
+        f.setLocationRelativeTo (null);
+        int btnDim = 15;
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j< c; j++) {
+                btns[i][j] = new Button (" ");
+                btns[i][j].setBounds(0 + i * btnDim, 0 + j * btnDim, btnDim, btnDim);
+                f.add(btns[i][j]);
+                btns[i][j].addActionListener (new ActionListener () {  
+                    public void actionPerformed (ActionEvent e) { 
+                        String []indices = e.getSource().toString().split(",");
+                        System.out.println((Integer.parseInt(indices[1]) / 15) + " " + (Integer.parseInt(indices[2]) - 30) / 15);
+                    }
+                });
+            }
+        }
+        f.validate();
     }
 }
 
