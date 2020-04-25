@@ -107,6 +107,20 @@ class GUI extends WindowAdapter{
             public void run() {
                 System.out.println("Status " + twodArray[0][2]);
                 twodArray = logic.getNextGen(twodArray);
+                for (int i = 0; i < r; i++) {
+                    for (int j = 0; j< c; j++) {
+                        if (twodArray[i][j]) {
+                            btns[i][j].setBackground(new Color(0, 255, 0));
+                        }
+                        else {
+                            btns[i][j].setBackground(new Color(0, 0, 255));
+                        }
+                        if (i == 0 || j == 0 || i == r - 1 || j == c - 1) {
+                            btns[i][j].setBackground(new Color(255, 0, 0));
+                            twodArray[i][j] = false;
+                        }
+                    }
+                }
             }
         };
 
@@ -121,7 +135,40 @@ class Logic {
     }
 
     public boolean[][] getNextGen(boolean prev[][]) {
-        return prev;
+        int r = prev.length;
+        int c = prev[0].length; 
+        boolean [][]next = new boolean[r][c];
+
+        // Any live cell with two or three live neighbors survives.
+        // Any dead cell with three live neighbors becomes a live cell.
+        // All other live cells die in the next generation. Similarly, all other dead cells stay dead.
+        
+        for (int idx = 1; idx < r - 1; idx ++) {
+            for (int jdx = 1; jdx < c - 1; jdx++) {
+                int alive = prev[idx][jdx] ? -1 : 0;
+                for (int itr = -1; itr <= 1; itr++)  {
+                    for (int jtr = -1; jtr <= 1; jtr++) {
+                        alive += prev[idx + itr][jdx + jtr] ? 1 : 0;
+                    }
+                }
+                if (prev[idx][jdx]) {
+                    if (alive == 2 || alive == 3) {
+                        next[idx][jdx] = true;
+                    } else {
+                        next[idx][jdx] = false;
+                    }
+                } else {
+                    if (alive == 3) {
+                        next[idx][jdx] = true;
+                    }
+                    else {
+                        next[idx][jdx] = false;
+                    }
+                }
+            }
+        } 
+        
+        return next;
     }
 }
 
