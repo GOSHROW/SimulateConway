@@ -93,7 +93,7 @@ class GUI extends WindowAdapter{
                             btns[idx][jdx].setBackground(new Color(0, 0, 255));
                         }
                         twodArray[idx][jdx] = !twodArray[idx][jdx];
-                        System.out.println("Toggled " + idx + " " + jdx + " " + twodArray[idx][jdx]);
+                        // System.out.println("Toggled " + idx + " " + jdx + " " + twodArray[idx][jdx]);
                     }
                 });
             }
@@ -105,17 +105,18 @@ class GUI extends WindowAdapter{
         TimerTask myTask = new TimerTask() {
             @Override
             public void run() {
-                System.out.println("Status " + twodArray[0][2]);
+                // System.out.println("Status " + twodArray[0][2]);
                 twodArray = logic.getNextGen(twodArray);
                 for (int i = 0; i < r; i++) {
                     for (int j = 0; j< c; j++) {
+                        // System.out.print(twodArray[i][j] + ",");
                         if (twodArray[i][j]) {
-                            btns[i][j].setBackground(new Color(0, 255, 0));
-                        }
-                        else {
                             btns[i][j].setBackground(new Color(0, 0, 255));
                         }
-                        if (i == 0 || j == 0 || i == r - 1 || j == c - 1) {
+                        else {
+                            btns[i][j].setBackground(new Color(0, 255, 0));
+                        }
+                        if (i <= 2 || j == 0 || i == r - 1 || j == c - 1) {
                             btns[i][j].setBackground(new Color(255, 0, 0));
                             twodArray[i][j] = false;
                         }
@@ -131,7 +132,7 @@ class GUI extends WindowAdapter{
 class Logic {
 
     Logic() {
-
+        // empty ctor
     }
 
     public boolean[][] getNextGen(boolean prev[][]) {
