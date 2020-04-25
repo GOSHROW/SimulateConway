@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;  
 import java.util.*;
 import javax.swing.*;
+import java.util.Timer;
 
 class GUI extends WindowAdapter{  
 
@@ -22,7 +23,7 @@ class GUI extends WindowAdapter{
     public void getParams() {                             
         JSpinner row = new JSpinner (new SpinnerNumberModel(60, 2, 200, 1));
         JSpinner col = new JSpinner (new SpinnerNumberModel(50, 2, 160, 1));  
-        JSpinner tm = new JSpinner (new SpinnerNumberModel(50, 50, 10000, 50));    
+        JSpinner tm = new JSpinner (new SpinnerNumberModel(5000, 50, 10000, 50));    
         Label rowL = new Label ("Enter no. of rows");
         Label colL = new Label ("Enter no. of columns");
         Label tmL = new Label ("Enter time-gap in milli-seconds");                                                                                                            
@@ -56,6 +57,7 @@ class GUI extends WindowAdapter{
 
     public void windowClosing(WindowEvent e) {  
         f.dispose();  
+        System.exit(0);
     }  
 
     public void GUISetup() {
@@ -63,12 +65,17 @@ class GUI extends WindowAdapter{
         for (int i = 0, len = twodArray.length; i < len; i++) {
             Arrays.fill(twodArray[i], 0);
         }
-
+        
         Button [][]btns = new Button[r][c];
         f.removeAll();
         f.validate();
         f.setSize (900,750);
         f.setLocationRelativeTo (null);
+        f.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                f.dispose();
+            }
+        });
         int btnDim = 15;
         for (int i = 0; i < r; i++) {
             for (int j = 0; j< c; j++) {
@@ -86,23 +93,22 @@ class GUI extends WindowAdapter{
                             btns[idx][jdx].setBackground(new Color(0, 0, 255));
                         }
                         twodArray[idx][jdx] = (twodArray[idx][jdx] == 1) ? 0: 1;
+                        System.out.println("Toggled " + idx + " " + jdx + " " + twodArray[idx][jdx]);
                     }
                 });
             }
         }
         f.validate();
 
-            System.out.println("HOLA");
-            try 
-            {
-                Thread.sleep(t);
-            } 
-            catch(InterruptedException e)
-            {
-                f.dispose();
+        Timer timer = new Timer();
+        TimerTask myTask = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Status " + twodArray[0][2]);
             }
-            f.validate();
-        
+        };
+
+        timer.schedule(myTask, t, t);
     }
 }
 
