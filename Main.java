@@ -7,7 +7,7 @@ import java.util.Timer;
 class GUI extends WindowAdapter{  
 
     Frame f;
-    int[][] twodArray;
+    boolean[][] twodArray;
     int r, c, t;
 
     GUI() {  
@@ -23,7 +23,7 @@ class GUI extends WindowAdapter{
     public void getParams() {                             
         JSpinner row = new JSpinner (new SpinnerNumberModel(60, 2, 200, 1));
         JSpinner col = new JSpinner (new SpinnerNumberModel(50, 2, 160, 1));  
-        JSpinner tm = new JSpinner (new SpinnerNumberModel(5000, 50, 10000, 50));    
+        JSpinner tm = new JSpinner (new SpinnerNumberModel(50, 50, 10000, 50));    
         Label rowL = new Label ("Enter no. of rows");
         Label colL = new Label ("Enter no. of columns");
         Label tmL = new Label ("Enter time-gap in milli-seconds");                                                                                                            
@@ -61,9 +61,9 @@ class GUI extends WindowAdapter{
     }  
 
     public void GUISetup() {
-        twodArray = new int[r][c];
+        twodArray = new boolean[r][c];
         for (int i = 0, len = twodArray.length; i < len; i++) {
-            Arrays.fill(twodArray[i], 0);
+            Arrays.fill(twodArray[i], false);
         }
         
         Button [][]btns = new Button[r][c];
@@ -87,12 +87,12 @@ class GUI extends WindowAdapter{
                         String []indices = e.getSource().toString().split(",");
                         int idx = (Integer.parseInt(indices[1]) / 15);
                         int jdx = (Integer.parseInt(indices[2]) / 15);
-                        if (twodArray[idx][jdx] == 1) {
+                        if (twodArray[idx][jdx]) {
                             btns[idx][jdx].setBackground(new Color(0, 255, 0));
                         } else {
                             btns[idx][jdx].setBackground(new Color(0, 0, 255));
                         }
-                        twodArray[idx][jdx] = (twodArray[idx][jdx] == 1) ? 0: 1;
+                        twodArray[idx][jdx] = !twodArray[idx][jdx];
                         System.out.println("Toggled " + idx + " " + jdx + " " + twodArray[idx][jdx]);
                     }
                 });
@@ -101,16 +101,30 @@ class GUI extends WindowAdapter{
         f.validate();
 
         Timer timer = new Timer();
+        Logic logic = new Logic();
         TimerTask myTask = new TimerTask() {
             @Override
             public void run() {
                 System.out.println("Status " + twodArray[0][2]);
+                twodArray = logic.getNextGen(twodArray);
             }
         };
 
         timer.schedule(myTask, t, t);
     }
 }
+
+class Logic {
+
+    Logic() {
+
+    }
+
+    public boolean[][] getNextGen(boolean prev[][]) {
+        return prev;
+    }
+}
+
 
 public class Main {
     public static void main(String[] args) {  
