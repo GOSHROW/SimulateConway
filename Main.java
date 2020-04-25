@@ -8,12 +8,12 @@ class GUI extends WindowAdapter{
 
     Frame f;
     boolean[][] twodArray;
-    int r, c, t;
+    int r, c, delay, period;
 
     GUI() {  
         f = new Frame();  
         f.addWindowListener(this);  
-        f.setSize(400,250);  
+        f.setSize(400,300);  
         f.setLayout(null);  
         f.setTitle("GOSHROW's Conway's Game of Life");
         f.setLocationRelativeTo(null);
@@ -23,30 +23,36 @@ class GUI extends WindowAdapter{
     public void getParams() {                             
         JSpinner row = new JSpinner (new SpinnerNumberModel(60, 2, 200, 1));
         JSpinner col = new JSpinner (new SpinnerNumberModel(50, 2, 160, 1));  
-        JSpinner tm = new JSpinner (new SpinnerNumberModel(50, 50, 10000, 50));    
+        JSpinner tp = new JSpinner (new SpinnerNumberModel(50, 50, 10000, 50));
+        JSpinner td = new JSpinner (new SpinnerNumberModel(10, 1, 600, 1));
         Label rowL = new Label ("Enter no. of rows");
         Label colL = new Label ("Enter no. of columns");
-        Label tmL = new Label ("Enter time-gap in milli-seconds");                                                                                                            
+        Label tpL = new Label ("Enter time-gap in milli-seconds");
+        Label tdL = new Label ("Enter seed time in seconds");                                                                                                            
         row.setBounds(250, 50, 100, 30);  
         col.setBounds(250, 100, 100, 30); 
-        tm.setBounds(250, 150, 100, 30);
-        rowL.setBounds(50, 50, 135, 30);
-        colL.setBounds(50, 100, 135, 30);
-        tmL.setBounds(50, 150, 135, 30); 
+        tp.setBounds(250, 150, 100, 30);
+        td.setBounds(250, 200, 100, 30);
+        rowL.setBounds(30, 50, 200, 30);
+        colL.setBounds(30, 100, 200, 30);
+        tpL.setBounds(30, 150, 200, 30);
+        tdL.setBounds(30, 200, 200, 30); 
         f.add(row); 
         f.add(col);
-        f.add(tm);
+        f.add(tp);
+        f.add(td);
         f.add(rowL);
         f.add(colL);
-        f.add(tmL);
+        f.add(tpL);
+        f.add(tdL);
         Button submit = new Button("Start Sim");
-        submit.setBounds(150, 210, 100, 30);
+        submit.setBounds(150, 260, 100, 30);
         submit.addActionListener(new ActionListener(){  
             public void actionPerformed(ActionEvent e){  
                     r = Integer.parseInt(row.getValue().toString().trim());
                     c = Integer.parseInt(col.getValue().toString().trim());
-                    t = Integer.parseInt(tm.getValue().toString().trim());
-                    
+                    period = Integer.parseInt(tp.getValue().toString().trim());
+                    delay = Integer.parseInt(td.getValue().toString().trim()) * 1000;
                     GUISetup();
                 }  
             }
@@ -116,7 +122,7 @@ class GUI extends WindowAdapter{
                         else {
                             btns[i][j].setBackground(new Color(0, 255, 0));
                         }
-                        if (i <= 2 || j == 0 || i == r - 1 || j == c - 1) {
+                        if (i == 0 || j <= 2 || i == r - 1 || j == c - 1) {
                             btns[i][j].setBackground(new Color(255, 0, 0));
                             twodArray[i][j] = false;
                         }
@@ -125,7 +131,7 @@ class GUI extends WindowAdapter{
             }
         };
 
-        timer.schedule(myTask, t, t);
+        timer.schedule(myTask, delay, period);
     }
 }
 
@@ -177,7 +183,6 @@ class Logic {
 public class Main {
     public static void main(String[] args) {  
         GUI ob = new GUI();  
-        // while (True) {
         ob.getParams();
     }  
 
